@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Main Response
-struct ReservationResponse: Codable {
+struct ReservationResponse: Decodable {
     let content: [Reservation]
     let pageable: Pageable
     let last: Bool
@@ -25,7 +25,7 @@ struct ReservationResponse: Codable {
 }
 
 // MARK: - Reservation
-struct Reservation: Codable {
+struct Reservation: Decodable {
     let orderId: Int
     let studioProfile: String
     let studioName: String
@@ -49,7 +49,7 @@ struct Reservation: Codable {
 }
 
 // MARK: - Order Item
-struct OrderItem: Codable {
+struct OrderItem: Decodable {
     let itemId: Int
     let itemName: String
     let itemPrice: Int // 상품 단일 가격
@@ -69,7 +69,7 @@ struct OrderItem: Codable {
 }
 
 // MARK: - Admin Order Option
-struct OrderOption: Codable {
+struct OrderOption: Decodable {
     let optionId: Int
     let optionName: String
     let optionPrice: Int // 옵션 단일 가격
@@ -83,7 +83,7 @@ struct OrderOption: Codable {
 }
 
 // MARK: - Pageable Information
-struct Pageable: Codable {
+struct Pageable: Decodable {
     let pageNumber: Int
     let pageSize: Int
     let sort: Sort
@@ -109,7 +109,7 @@ struct Pageable: Codable {
 }
 
 // MARK: - Sort Information
-struct Sort: Codable {
+struct Sort: Decodable {
     let empty, unsorted, sorted: Bool
     
     static let mockData = Sort(empty: false, unsorted: true, sorted: false)
