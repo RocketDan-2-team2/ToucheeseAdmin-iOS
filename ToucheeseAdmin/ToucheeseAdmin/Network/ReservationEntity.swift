@@ -114,3 +114,10 @@ struct Sort: Decodable {
     
     static let mockData = Sort(empty: false, unsorted: true, sorted: false)
 }
+
+struct PostBody: Encodable {
+    let page: Int
+    let size: Int
+    
+    static let mockData = PostBody(page: 0, size: 10)
+}
