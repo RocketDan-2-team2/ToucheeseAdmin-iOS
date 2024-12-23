@@ -43,9 +43,11 @@ struct Reservation: Decodable {
     
     static let reservationFirstItem: Reservation = Reservation(orderId: 1, studioProfile: studioProfileImage, studioName: "미미", orderDate: orderDateTime, userName: "이선준", orderItems: [OrderItem.firstOrder])
     
-    static let reservationSecondItem: Reservation = Reservation(orderId: 2, studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder, OrderItem.thirdOrder])
+    static let reservationSecondItem: Reservation = Reservation(orderId: 2, studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder])
     
-    static let reservationThirdItem: Reservation = Reservation(orderId: 3, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder, OrderItem.secondOrder])
+    static let reservationThirdItem: Reservation = Reservation(orderId: 3, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
+    
+    static let reservationFourthItem: Reservation = Reservation(orderId: 4, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
 }
 
 // MARK: - Order Item
