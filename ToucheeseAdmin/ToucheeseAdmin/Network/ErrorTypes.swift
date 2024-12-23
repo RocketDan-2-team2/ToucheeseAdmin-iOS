@@ -11,5 +11,6 @@ enum ErrorTypes: Error {
     case invalidURL
     case noData
     case decodingError
+    case encodingError
     case serverError(statusCode: Int)
 }
