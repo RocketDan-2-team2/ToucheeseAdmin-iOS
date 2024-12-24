@@ -14,11 +14,12 @@ struct ContentView: View {
     @State private var page: Int = 0
     
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ScrollView {
+            LazyVGrid(columns: [GridItem.init()]) {
+                ForEach(reservationArr, id:\.self) { reservation in
+                    ListCell(order: reservation)
+                }
+            }
         }
         .padding()
         .onAppear {
