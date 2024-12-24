@@ -39,17 +39,27 @@ struct ListCell: View {
                 let imageURL = URL(string: studioImage)
                 
                 AsyncImage(url: imageURL) { image in
-                    image.image?.resizable()
+                    image.resizable()
                         .aspectRatio(contentMode: .fill)
                         .overlay {
                             Circle()
                                 .stroke(Color.black, lineWidth: 1)
                         }
-                        .frame(width: 60, height: 60)
+                        
+                } placeholder: {
+                    ProgressView()
+                        .aspectRatio(contentMode: .fill)
+                        .overlay {
+                            Circle()
+                                .stroke(Color.black, lineWidth: 1)
+                                .frame(width: 60, height: 60)
+                        }
+                        
                 }
                 .clipShape(
                     Circle()
                 )
+                .frame(width: 60, height: 60)
                 .padding(.leading)
                 
                 VStack(alignment: .leading) {
@@ -58,7 +68,7 @@ struct ListCell: View {
                     
                     HStack {
                         Image(systemName: "calendar")
-                        Text("2024-02-03")
+                        Text(orderDate.substring(from: 0, to: 9))
                     }
                 }
                 Spacer()
@@ -86,11 +96,11 @@ struct ListCell: View {
                     ForEach(order.orderItems[0].orderOptions, id:\.self) { item in
                         HStack {
                             HTwoText(first: item.optionName, second: "\(item.optionPrice)원")
-                            Text("x \(item.optionQuantity)")
+                            Image(systemName: "xmark")
+                            Text("\(item.optionQuantity)")
                         }
                     }
                 }
-                
                 
                 Divider()
                 
@@ -137,15 +147,6 @@ struct ListCell: View {
             }
         }
         
-            
-        
-        
-        
-        
-        
-            
-                
-        
     }
 }
 
@@ -164,6 +165,19 @@ struct HTwoText: View {
                 .font(.system(size: 17))
         }
         .padding(.bottom, 3)
+    }
+}
+
+extension String {
+    func substring(from: Int, to: Int) -> String {
+        guard from < count, to >= 0, to - from >= 0 else {
+            return ""
+        }
+        
+        let startIndex = index(self.startIndex, offsetBy: from)
+        let endIndex = index(self.startIndex, offsetBy: to + 1)
+        
+        return String(self[startIndex ..< endIndex])
     }
 }
 
