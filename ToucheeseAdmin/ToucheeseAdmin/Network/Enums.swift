@@ -25,4 +25,17 @@ enum ReservationStatus: String {
     case CONFIRM_RESERVATION    // 확정
     case FINISHED_FILM          // 완료
     case CANCEL_RESERVATION     // 거절
+    
+    var description: String {
+        switch self {
+        case .FINISHED_FILM:
+            "촬영을 완료하였습니다."
+        case ReservationStatus.CANCEL_RESERVATION:
+            "촬영을 완료하였습니다."
+        case ReservationStatus.CONFIRM_RESERVATION:
+            "촬영을 완료하였습니다."
+        default :
+            "default"
+        }
+    }
 }

@@ -164,28 +164,12 @@ struct ListCell: View {
                         .buttonStyle(.borderedProminent)
                         .tint(Color.primary02)
                     }
-                case .CONFIRM_RESERVATION :
+                default :
                     RoundedRectangle(cornerRadius: 10)
                         .frame(height: 70)
                         .foregroundStyle(.gray03)
                         .overlay {
-                            Text("예약이 완료되었습니다.")
-                                .font(.system(size: 20))
-                        }
-                case .FINISHED_FILM :
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 70)
-                        .foregroundStyle(.gray03)
-                        .overlay {
-                            Text("촬영이 완료되었습니다.")
-                                .font(.system(size: 20))
-                        }
-                case .CANCEL_RESERVATION :
-                    RoundedRectangle(cornerRadius: 10)
-                        .frame(height: 70)
-                        .foregroundStyle(.gray03)
-                        .overlay {
-                            Text("예약이 취소되었습니다.")
+                            Text(reservationState.description)
                                 .font(.system(size: 20))
                         }
                 }
@@ -212,6 +196,7 @@ struct WaitingView: View {
     var body: some View {
         ZStack {
             Rectangle()
+                .fill(Color.black.opacity(0.5))
                 .frame(minWidth: .infinity, minHeight: .infinity)
             ProgressView()
         }
