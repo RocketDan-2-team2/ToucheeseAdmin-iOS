@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ListCell: View {
+    let network = Network.shared
+    
     let order: Reservation
     
+    private var orderId: Int
     private var studioImage: String
     private var studioName: String
     private var orderDate: String // Date extension으로 추가해주기
@@ -17,9 +20,13 @@ struct ListCell: View {
     private var itemName: String
     private var itemPrice: Int
     private var totalPrice: Int = 0
+    @State private var reservationState: ReservationStatus
+    
+    @State private var isShowProgressView: Bool = false
     
     init(order: Reservation) {
         self.order = order
+        self.orderId = order.orderId
         self.studioImage = order.studioProfile
         self.studioName = order.studioName
         self.orderDate = order.orderDate
@@ -31,6 +38,7 @@ struct ListCell: View {
             self.totalPrice += option.optionPrice * option.optionQuantity
         }
         self.totalPrice += itemPrice
+        self.reservationState = ReservationStatus(rawValue: order.orderStatus)!
     }
     
     var body: some View {
@@ -45,7 +53,7 @@ struct ListCell: View {
                             Circle()
                                 .stroke(Color.black, lineWidth: 1)
                         }
-                        
+                    
                 } placeholder: {
                     ProgressView()
                         .aspectRatio(contentMode: .fill)
@@ -54,7 +62,7 @@ struct ListCell: View {
                                 .stroke(Color.black, lineWidth: 1)
                                 .frame(width: 60, height: 60)
                         }
-                        
+                    
                 }
                 .clipShape(
                     Circle()
@@ -112,39 +120,85 @@ struct ListCell: View {
                 }
                 .padding(.vertical, 3)
                 
-                HStack {
-                    Button {
+                switch reservationState {
+                case .KEEP_RESERVATION :
+                    HStack {
+                        Button {
+                            Task {
+                                do {
+                                    isShowProgressView = true
+                                    try await network.handleOrder(id: orderId, response: ReservationResult.reject)
+                                    isShowProgressView = false
+                                    reservationState = .CANCEL_RESERVATION
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        } label: {
+                            Text("예약 실패")
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.primary)
+                                .padding()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color.primary02)
                         
-                    } label: {
-                        Text("예약 실패")
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(Color.primary)
-                            .padding()
+                        Button {
+                            Task {
+                                do {
+                                    isShowProgressView = true
+                                    try await network.handleOrder(id: orderId, response: ReservationResult.approve)
+                                    isShowProgressView = false
+                                    reservationState = .CONFIRM_RESERVATION
+                                    
+                                } catch {
+                                    print(error.localizedDescription)
+                                }
+                            }
+                        } label: {
+                            Text("예약 성공")
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.primary)
+                                .padding()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color.primary02)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Color.primary02)
-                    
-                    
-                    Button {
-                        
-                    } label: {
-                        Text("예약 성공")
-                            .frame(maxWidth: .infinity)
-                            .foregroundStyle(Color.primary)
-                            .padding()
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .tint(Color.primary02)
-                    
-                    
-                    
+                default :
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 70)
+                        .foregroundStyle(.gray03)
+                        .overlay {
+                            Text(reservationState.description)
+                                .font(.system(size: 20))
+                        }
                 }
+                
             }
             .padding()
             .background {
                 UnevenRoundedRectangle(cornerRadii: .init(bottomLeading: 10, bottomTrailing: 10))
                     .fill(Color.primary01)
             }
+            .overlay {
+                if isShowProgressView {
+                    WaitingView()
+                } else {
+                    
+                }
+            }
+        }
+        
+    }
+}
+
+struct WaitingView: View {
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.black.opacity(0.5))
+                .frame(minWidth: .infinity, minHeight: .infinity)
+            ProgressView()
         }
         
     }

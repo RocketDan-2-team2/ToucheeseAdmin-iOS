@@ -27,6 +27,7 @@ struct ReservationResponse: Decodable, Hashable {
 // MARK: - Reservation
 struct Reservation: Decodable, Hashable {
     let orderId: Int
+    let orderStatus: String // KEEP_RESERVATION("예약 대기"), CONFIRM_RESERVATION("예약 확정"), FINISHED_FILM("촬영 완료"), CANCEL_RESERVATION("예약 취소");
     let studioProfile: String
     let studioName: String
     let orderDate: String // ISO8601 형식의 문자열로 처리
@@ -34,20 +35,20 @@ struct Reservation: Decodable, Hashable {
     let orderItems: [OrderItem]
     
     enum CodingKeys: String, CodingKey {
-        case orderId, studioProfile, studioName, userName, orderItems
+        case orderId, orderStatus ,studioProfile, studioName, userName, orderItems
         case orderDate = "orderDateTime"
     }
     
     static let studioProfileImage = "https://i.imgur.com/lB7gB4f.jpeg"
     static let orderDateTime = "2024-12-06T23:51"
     
-    static let reservationFirstItem: Reservation = Reservation(orderId: 1, studioProfile: studioProfileImage, studioName: "갱남스튜디오", orderDate: orderDateTime, userName: "이선준", orderItems: [OrderItem.firstOrder])
+    static let reservationFirstItem: Reservation = Reservation(orderId: 1, orderStatus: "KEEP_RESERVATION", studioProfile: studioProfileImage, studioName: "갱남스튜디오", orderDate: orderDateTime, userName: "이선준", orderItems: [OrderItem.firstOrder])
     
-    static let reservationSecondItem: Reservation = Reservation(orderId: 2, studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder])
+    static let reservationSecondItem: Reservation = Reservation(orderId: 2, orderStatus: "CONFIRM_RESERVATION", studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder])
     
-    static let reservationThirdItem: Reservation = Reservation(orderId: 3, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
+    static let reservationThirdItem: Reservation = Reservation(orderId: 3, orderStatus: "FINISHED_FILM", studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
     
-    static let reservationFourthItem: Reservation = Reservation(orderId: 4, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
+    static let reservationFourthItem: Reservation = Reservation(orderId: 4, orderStatus: "CANCEL_RESERVATION", studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
 }
 
 // MARK: - Order Item
