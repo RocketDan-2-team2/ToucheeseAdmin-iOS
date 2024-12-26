@@ -15,13 +15,21 @@ struct ContentView: View {
     
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: [GridItem.init()]) {
+            LazyVStack {
                 ForEach(reservationArr, id:\.self) { reservation in
                     ListCell(order: reservation)
                 }
+                Rectangle()
+                    .fill(.clear)
+                    .frame(height: 5.0)
+                    .onAppear {
+                        if !reservationArr.isEmpty {
+                            print("다음 페이지")
+                        }
+                    }
             }
+            .padding()
         }
-        .padding()
         .onAppear {
             Task {
                 do {
