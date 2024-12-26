@@ -23,7 +23,26 @@ class Network {
         return nil
     }
     
-    func fetchData(from url: String, body: PostBody) async throws -> Data {
+    func handleOrder(id: Int, response: ReservationResult) async throws {
+        let orderId = "/\(id)"
+        let fullURL = baseURLString + orderId + "/\(response.rawValue)"
+        guard let url = URL(string: fullURL) else { throw ErrorTypes.invalidURL }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        let (_, response) = try await urlSession.data(for: request)
+        
+        guard let response = response as? HTTPURLResponse else {
+            throw ErrorTypes.serverError(statusCode: 0)
+        }
+        
+        guard (200...299).contains(response.statusCode) else {
+            throw ErrorTypes.serverError(statusCode: response.statusCode)
+        }
+    }
+    
+    private func fetchData(from url: String, body: PostBody) async throws -> Data {
         guard let url = URL(string: url) else { throw ErrorTypes.invalidURL }
         
         var request = URLRequest(url: url)
@@ -44,7 +63,7 @@ class Network {
         return data
     }
     
-    func decodeData<T: Decodable>(from data: Data) throws -> T {
+    private func decodeData<T: Decodable>(from data: Data) throws -> T {
         let decoder = JSONDecoder()
         
         do {
@@ -54,7 +73,7 @@ class Network {
         }
     }
     
-    func encodeData(from data: PostBody) throws -> Data {
+    private func encodeData(from data: PostBody) throws -> Data {
         let encoder = JSONEncoder()
         
         do {
