@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Main Response
-struct ReservationResponse: Decodable {
+struct ReservationResponse: Decodable, Hashable {
     let content: [Reservation]
     let pageable: Pageable
     let last: Bool
@@ -25,7 +25,7 @@ struct ReservationResponse: Decodable {
 }
 
 // MARK: - Reservation
-struct Reservation: Decodable {
+struct Reservation: Decodable, Hashable {
     let orderId: Int
     let studioProfile: String
     let studioName: String
@@ -41,15 +41,17 @@ struct Reservation: Decodable {
     static let studioProfileImage = "https://i.imgur.com/lB7gB4f.jpeg"
     static let orderDateTime = "2024-12-06T23:51"
     
-    static let reservationFirstItem: Reservation = Reservation(orderId: 1, studioProfile: studioProfileImage, studioName: "미미", orderDate: orderDateTime, userName: "이선준", orderItems: [OrderItem.firstOrder])
+    static let reservationFirstItem: Reservation = Reservation(orderId: 1, studioProfile: studioProfileImage, studioName: "갱남스튜디오", orderDate: orderDateTime, userName: "이선준", orderItems: [OrderItem.firstOrder])
     
-    static let reservationSecondItem: Reservation = Reservation(orderId: 2, studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder, OrderItem.thirdOrder])
+    static let reservationSecondItem: Reservation = Reservation(orderId: 2, studioProfile: studioProfileImage, studioName: "시현하다", orderDate: orderDateTime, userName: "김철수", orderItems: [OrderItem.secondOrder])
     
-    static let reservationThirdItem: Reservation = Reservation(orderId: 3, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder, OrderItem.secondOrder])
+    static let reservationThirdItem: Reservation = Reservation(orderId: 3, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
+    
+    static let reservationFourthItem: Reservation = Reservation(orderId: 4, studioProfile: studioProfileImage, studioName: "흑백사진관", orderDate: orderDateTime, userName: "김영희", orderItems: [OrderItem.fourthOrder])
 }
 
 // MARK: - Order Item
-struct OrderItem: Decodable {
+struct OrderItem: Decodable, Hashable {
     let itemId: Int
     let itemName: String
     let itemPrice: Int // 상품 단일 가격
@@ -69,7 +71,7 @@ struct OrderItem: Decodable {
 }
 
 // MARK: - Admin Order Option
-struct OrderOption: Decodable {
+struct OrderOption: Decodable, Hashable {
     let optionId: Int
     let optionName: String
     let optionPrice: Int // 옵션 단일 가격
@@ -83,7 +85,7 @@ struct OrderOption: Decodable {
 }
 
 // MARK: - Pageable Information
-struct Pageable: Decodable {
+struct Pageable: Decodable, Hashable {
     let pageNumber: Int
     let pageSize: Int
     let sort: Sort
@@ -109,7 +111,7 @@ struct Pageable: Decodable {
 }
 
 // MARK: - Sort Information
-struct Sort: Decodable {
+struct Sort: Decodable, Hashable {
     let empty, unsorted, sorted: Bool
     
     static let mockData = Sort(empty: false, unsorted: true, sorted: false)
