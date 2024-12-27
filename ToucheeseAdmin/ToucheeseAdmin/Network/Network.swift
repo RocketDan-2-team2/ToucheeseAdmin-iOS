@@ -16,7 +16,7 @@ class Network {
     
     private init() { }
     
-    func getOrders(body: PostBody) async throws -> ReservationResponse? {
+    func getOrders(body: PostBody) async -> ReservationResponse? {
         do {
             let data = try await fetchData(from: baseURLString, body: body)
             
