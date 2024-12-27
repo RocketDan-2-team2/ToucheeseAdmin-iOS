@@ -8,13 +8,17 @@
 import Foundation
 
 class Network {
+
     static let shared = Network()
+    
     private let urlSession = URLSession.shared
     private let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
     
-    func getOrders() async throws -> ReservationResponse? {
+    private init() { }
+    
+    func getOrders(body: PostBody) async throws -> ReservationResponse? {
         do {
-            let data = try await fetchData(from: baseURLString, body: PostBody.mockData)
+            let data = try await fetchData(from: baseURLString, body: body)
             
             return try decodeData(from: data)
         } catch let error as ErrorTypes {
@@ -87,7 +91,7 @@ class Network {
         }
     }
     
-    private func encodeData(from data: PostBody) throws -> Data {
+    private func encodeData(from data: Encodable) throws -> Data {
         let encoder = JSONEncoder()
         
         do {
