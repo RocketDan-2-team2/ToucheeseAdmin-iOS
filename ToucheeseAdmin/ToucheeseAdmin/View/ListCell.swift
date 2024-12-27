@@ -12,13 +12,13 @@ struct ListCell: View {
     
     let order: Reservation
     
-    private var orderId: Int
-    private var studioImage: String
-    private var studioName: String
-    private var orderDate: String // Date extension으로 추가해주기
-    private var userName: String
-    private var itemName: String
-    private var itemPrice: Int
+    private let orderId: Int
+    private let studioImage: String
+    private let studioName: String
+    private let orderDate: String // Date extension으로 추가해주기
+    private let userName: String
+    private let itemName: String
+    private let itemPrice: Int
     private var totalPrice: Int = 0
     @State private var reservationState: ReservationStatus
     
@@ -130,8 +130,10 @@ struct ListCell: View {
                                     try await network.handleOrder(id: orderId, response: ReservationResult.reject)
                                     isShowProgressView = false
                                     reservationState = .CANCEL_RESERVATION
+                                } catch let error as ErrorTypes {
+                                    print(error.errorMessage)
                                 } catch {
-                                    print(error.localizedDescription)
+                                    print("알 수 없는 에러입니다. : ", error)
                                 }
                             }
                         } label: {
@@ -151,8 +153,10 @@ struct ListCell: View {
                                     isShowProgressView = false
                                     reservationState = .CONFIRM_RESERVATION
                                     
+                                } catch let error as ErrorTypes {
+                                    print(error.errorMessage)
                                 } catch {
-                                    print(error.localizedDescription)
+                                    print("알 수 없는 에러입니다. : ", error)
                                 }
                             }
                         } label: {
@@ -183,8 +187,6 @@ struct ListCell: View {
             .overlay {
                 if isShowProgressView {
                     WaitingView()
-                } else {
-                    
                 }
             }
         }

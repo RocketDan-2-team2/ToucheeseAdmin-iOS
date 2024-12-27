@@ -17,8 +17,10 @@ class Network {
             let data = try await fetchData(from: baseURLString, body: PostBody.mockData)
             
             return try decodeData(from: data)
+        } catch let error as ErrorTypes {
+            print(error.errorMessage)
         } catch {
-            print(error.localizedDescription)
+            print("알 수 없는 에러입니다. : ", error)
         }
         return nil
     }
@@ -34,11 +36,18 @@ class Network {
         let (_, response) = try await urlSession.data(for: request)
         
         guard let response = response as? HTTPURLResponse else {
-            throw ErrorTypes.serverError(statusCode: 0)
+            throw ErrorTypes.noResponse
         }
         
-        guard (200...299).contains(response.statusCode) else {
-            throw ErrorTypes.serverError(statusCode: response.statusCode)
+        switch response.statusCode {
+        case 200...299:
+            print("주문 처리가 성공적으로 반영되었습니다.")
+        case 400...499:
+            throw ErrorTypes.serverError(response.statusCode)
+        case 500...599:
+            throw ErrorTypes.serverError(response.statusCode)
+        default :
+            throw ErrorTypes.unknownError
         }
     }
     
@@ -53,14 +62,19 @@ class Network {
         let (data, response) = try await urlSession.data(for: request)
         
         guard let response = response as? HTTPURLResponse else {
-            throw ErrorTypes.serverError(statusCode: 0)
+            throw ErrorTypes.noResponse
         }
         
-        guard (200...299).contains(response.statusCode) else {
-            throw ErrorTypes.serverError(statusCode: response.statusCode)
+        switch response.statusCode {
+        case 200...299:
+            return data
+        case 400...499:
+            throw ErrorTypes.serverError(response.statusCode)
+        case 500...599:
+            throw ErrorTypes.serverError(response.statusCode)
+        default :
+            throw ErrorTypes.unknownError
         }
-        
-        return data
     }
     
     private func decodeData<T: Decodable>(from data: Data) throws -> T {

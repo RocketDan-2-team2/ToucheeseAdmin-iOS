@@ -12,7 +12,28 @@ enum ErrorTypes: Error {
     case noData
     case decodingError
     case encodingError
-    case serverError(statusCode: Int)
+    case noResponse
+    case serverError(Int)
+    case unknownError
+    
+    var errorMessage: String {
+        switch self {
+        case .invalidURL:
+            "URL이 잘못 생성되었습니다."
+        case .noData:
+            "데이터가 없습니다."
+        case .decodingError:
+            "디코딩 에러가 발생하였습니다."
+        case .encodingError:
+            "인코딩 에러가 발생하였습니다."
+        case .noResponse:
+            "응답이 없습니다."
+        case .serverError(let statusCode):
+            "네트워크 에러 : \(statusCode)"
+        case .unknownError:
+            "알 수 없는 에러입니다."
+        }
+    }
 }
 
 enum ReservationResult: String {
