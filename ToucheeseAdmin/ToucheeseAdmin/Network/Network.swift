@@ -8,13 +8,28 @@
 import Foundation
 
 class Network {
+
     static let shared = Network()
-    private let urlSession = URLSession.shared
+    
+    private let urlSession: URLSession
     private let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
     
-    func getOrders() async throws -> ReservationResponse? {
+    private init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 300
+        self.urlSession = URLSession(configuration: configuration)
+    }
+    
+    func getOrders(body: PostBody) async -> ReservationResponse? {
         do {
-            let data = try await fetchData(from: baseURLString, body: PostBody.mockData)
+            let data = try await fetchData(from: baseURLString, body: body)
+            
+            let response = try decodeData(from: data)
+            
+            print("Current Page: \(response.number)")
+            print("Total Pages: \(response.totalPages)")
+            print("Is Last Page: \(response.last)")
             
             return try decodeData(from: data)
         } catch let error as ErrorTypes {
@@ -59,7 +74,14 @@ class Network {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try encodeData(from: body)
         
+        print("Request URL: \(url)")
+        print("Request Body: \(String(data: request.httpBody!, encoding: .utf8) ?? "")")
+        
         let (data, response) = try await urlSession.data(for: request)
+        
+        if let responseString = String(data: data, encoding: .utf8) {
+            print("Response: \(responseString)")
+        }
         
         guard let response = response as? HTTPURLResponse else {
             throw ErrorTypes.noResponse
@@ -77,17 +99,17 @@ class Network {
         }
     }
     
-    private func decodeData<T: Decodable>(from data: Data) throws -> T {
+    private func decodeData(from data: Data) throws -> ReservationResponse {
         let decoder = JSONDecoder()
         
         do {
-            return try decoder.decode(T.self, from: data)
+            return try decoder.decode(ReservationResponse.self, from: data)
         } catch {
             throw ErrorTypes.decodingError
         }
     }
     
-    private func encodeData(from data: PostBody) throws -> Data {
+    private func encodeData(from data: Encodable) throws -> Data {
         let encoder = JSONEncoder()
         
         do {
