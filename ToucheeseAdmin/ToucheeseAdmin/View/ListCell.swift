@@ -168,7 +168,49 @@ struct ListCell: View {
                         .buttonStyle(.borderedProminent)
                         .tint(Color.primary02)
                     }
-                default :
+                case .CONFIRM_RESERVATION :
+                    VStack {
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(height: 70)
+                            .foregroundStyle(.gray03)
+                            .overlay {
+                                Text(reservationState.description)
+                                    .font(.system(size: 20))
+                            }
+                        
+                        Button {
+                            Task {
+                                do {
+                                    isShowProgressView = true
+                                    try await network.handleOrder(id: orderId, response: ReservationResult.finish)
+                                    isShowProgressView = false
+                                    reservationState = .FINISHED_FILM
+                                    
+                                } catch let error as ErrorTypes {
+                                    print(error.errorMessage)
+                                } catch {
+                                    print("알 수 없는 에러입니다. : ", error)
+                                }
+                            }
+                        } label: {
+                            Text("촬영 완료")
+                                .frame(maxWidth: .infinity)
+                                .foregroundStyle(Color.primary)
+                                .padding()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color.primary02)
+                        
+                    }
+                case .CANCEL_RESERVATION :
+                    RoundedRectangle(cornerRadius: 10)
+                        .frame(height: 70)
+                        .foregroundStyle(.gray03)
+                        .overlay {
+                            Text(reservationState.description)
+                                .font(.system(size: 20))
+                        }
+                case .FINISHED_FILM :
                     RoundedRectangle(cornerRadius: 10)
                         .frame(height: 70)
                         .foregroundStyle(.gray03)
