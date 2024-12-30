@@ -39,6 +39,7 @@ enum ErrorTypes: Error {
 enum ReservationResult: String {
     case approve
     case reject
+    case finish
 }
 
 enum ReservationStatus: String {
@@ -52,9 +53,9 @@ enum ReservationStatus: String {
         case .FINISHED_FILM:
             "촬영을 완료하였습니다."
         case ReservationStatus.CANCEL_RESERVATION:
-            "촬영을 완료하였습니다."
+            "예약이 취소되었습니다."
         case ReservationStatus.CONFIRM_RESERVATION:
-            "촬영을 완료하였습니다."
+            "예약이 확정되었습니다."
         default :
             "default"
         }
