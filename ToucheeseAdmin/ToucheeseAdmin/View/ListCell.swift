@@ -199,7 +199,6 @@ struct WaitingView: View {
         ZStack {
             Rectangle()
                 .fill(Color.black.opacity(0.5))
-                .frame(minWidth: .infinity, minHeight: .infinity)
             ProgressView()
         }
         
