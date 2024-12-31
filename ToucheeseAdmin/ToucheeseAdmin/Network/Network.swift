@@ -9,12 +9,10 @@ import Foundation
 
 class Network {
 
-    static let shared = Network()
-    
     private let urlSession: URLSession
     private let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
     
-    private init() {
+    init() {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 30
         configuration.timeoutIntervalForResource = 300
