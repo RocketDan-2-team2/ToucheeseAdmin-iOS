@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    private let network = Network.shared
+    private let network = Network()
     
     @State private var reservationArr: [Reservation] = []
     
@@ -24,7 +24,9 @@ struct ContentView: View {
                 ScrollView {
                     LazyVStack {
                         ForEach(reservationArr, id:\.self) { reservation in
-                            ListCell(order: reservation)
+                            ListCell(order: reservation) { id, result in
+                                try await network.handleOrder(id: id, response: result)
+                            }
                         }
                         Rectangle()
                             .fill(.clear)

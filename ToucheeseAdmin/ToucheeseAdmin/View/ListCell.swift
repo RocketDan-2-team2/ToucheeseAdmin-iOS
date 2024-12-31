@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ListCell: View {
-    let network = Network.shared
     
     let order: Reservation
+    let onReservationAction: (Int, ReservationResult) async throws -> Void
     
     private let orderId: Int
     private let studioImage: String
@@ -24,7 +24,7 @@ struct ListCell: View {
     
     @State private var isShowProgressView: Bool = false
     
-    init(order: Reservation) {
+    init(order: Reservation, onReservationAction: @escaping (Int, ReservationResult) async throws -> Void) {
         self.order = order
         self.orderId = order.orderId
         self.studioImage = order.studioProfile
@@ -39,6 +39,8 @@ struct ListCell: View {
         }
         self.totalPrice += itemPrice
         self.reservationState = ReservationStatus(rawValue: order.orderStatus)!
+        
+        self.onReservationAction = onReservationAction
     }
     
     var body: some View {
@@ -127,7 +129,8 @@ struct ListCell: View {
                             Task {
                                 do {
                                     isShowProgressView = true
-                                    try await network.handleOrder(id: orderId, response: ReservationResult.reject)
+//                                    try await network.handleOrder(id: orderId, response: ReservationResult.reject)
+                                    try await onReservationAction(orderId, ReservationResult.reject)
                                     isShowProgressView = false
                                     reservationState = .CANCEL_RESERVATION
                                 } catch let error as ErrorTypes {
@@ -149,7 +152,8 @@ struct ListCell: View {
                             Task {
                                 do {
                                     isShowProgressView = true
-                                    try await network.handleOrder(id: orderId, response: ReservationResult.approve)
+//                                    try await network.handleOrder(id: orderId, response: ReservationResult.approve)
+                                    try await onReservationAction(orderId, ReservationResult.approve)
                                     isShowProgressView = false
                                     reservationState = .CONFIRM_RESERVATION
                                     
@@ -182,7 +186,8 @@ struct ListCell: View {
                             Task {
                                 do {
                                     isShowProgressView = true
-                                    try await network.handleOrder(id: orderId, response: ReservationResult.finish)
+//                                    try await network.handleOrder(id: orderId, response: ReservationResult.finish)
+                                    try await onReservationAction(orderId, ReservationResult.finish)
                                     isShowProgressView = false
                                     reservationState = .FINISHED_FILM
                                     
@@ -279,5 +284,5 @@ extension String {
 }
 
 #Preview {
-    ListCell(order: Reservation.reservationFirstItem)
+//    ListCell(order: Reservation.reservationFirstItem, onReservationAction: <#(Int, ReservationResult) async throws -> Void#>)
 }
