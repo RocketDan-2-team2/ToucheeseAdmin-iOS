@@ -30,7 +30,7 @@ struct ListCell: View {
         self.studioImage = order.studioProfile
         self.studioName = order.studioName
         self.orderDate = order.orderDate
-        self.userName = order.userName
+        self.userName = order.userName ?? "이름없음"
         self.itemName = order.orderItems[0].itemName
         self.itemPrice = order.orderItems[0].itemPrice
         

@@ -31,7 +31,7 @@ struct Reservation: Decodable, Hashable {
     let studioProfile: String
     let studioName: String
     let orderDate: String // ISO8601 형식의 문자열로 처리
-    let userName: String
+    let userName: String?
     let orderItems: [OrderItem]
     
     enum CodingKeys: String, CodingKey {

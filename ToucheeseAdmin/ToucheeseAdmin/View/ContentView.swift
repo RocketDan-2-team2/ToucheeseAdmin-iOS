@@ -27,6 +27,12 @@ struct ContentView: View {
                             ListCell(order: reservation) { id, result in
                                 try await network.handleOrder(id: id, response: result)
                             }
+                            .background {
+                                        Color.white
+                                            .mask(RoundedRectangle(cornerRadius: 10))
+                                            .shadow(color: .gray03 ,radius: 4)
+                                            
+                                    }
                         }
                         Rectangle()
                             .fill(.clear)
